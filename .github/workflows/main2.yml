@@ -1,0 +1,28 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Change this to the appropriate branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Change this to the appropriate operating system
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install dependencies
+      run: |
+        sudo apt update && sudo apt install -y openssh-client  # Install SSH client
+
+        
+    - name: Deploy to EC2
+      run: |
+        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY_PATH }} -r ./app ec2-user@${{ secrets.EC2_INSTANCE_IP }}:~/app
+        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY_PATH }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} '
+          sudo cp -R ~/app /var/www/html
+          sudo service nginx restart
+          # Run any other deployment tasks as needed
+        
