@@ -10,7 +10,7 @@
     <label for="id">id</label>
     <input type="text" name="id">
 
-    <label for="number">NNumber</label>
+    <label for="number">number</label>
     <input type="number" name="number">
     <button type="submit" name="submit">submit</button>
   </form>
